@@ -5,13 +5,13 @@
 #include <algorithm>
 
 using namespace std;
-const long long INF = 1e18;
+const int INF = 1e9;
 
 class PrunedLabeling {
     // Helper function để tìm Hub chung giữa L_out(u) và L_in(v)
-    long long intersect(const vector<int>& hubs_u, const vector<long long>& dists_u,
-                  const vector<int>& hubs_v, const vector<long long>& dists_v) {
-        long long r = INF;
+    int intersect(const vector<int>& hubs_u, const vector<int>& dists_u,
+                  const vector<int>& hubs_v, const vector<int>& dists_v) {
+        int r = INF;
         size_t i = 0, j = 0;
         while (i < hubs_u.size() && j < hubs_v.size()) {
             if (hubs_u[i] == hubs_v[j]) {
@@ -51,7 +51,7 @@ class PrunedLabeling {
             if (d > P[u]) continue;
 
             // CHECK PRUNING: Liệu đã có đường đi u -> ... -> hub ngắn hơn chưa?
-            // Query nhanh O(1) bằng mảng T
+            // Query nhanh
             int query_dist = INF;
             for (size_t idx = 0; idx < L_v[u].size(); idx++) {
                 int h = L_v[u][idx];
@@ -107,17 +107,10 @@ public:
 
         for (int i = 0; i < N; i++) {
             int hub = order[i];
-
-            // PHASE 1: Xây dựng L_in (Hub -> các đỉnh u)
-            // Dùng đồ thị xuôi (g.adj). Khi query pruning cần check L_out(Hub) vs L_in(u) -> T load từ L_out(Hub)
-            // Tuy nhiên với directed HL, ta xử lý hơi khác:
-            // Forward BFS: Tìm v mà Hub -> v. Check: Dist(Hub->v) <= Dist(Hub->h) + Dist(h->v)
-            
-            // Để đơn giản cho presentation, ta chạy 2 lần BFS độc lập:
-            // 1. BFS trên graph xuôi (g.adj) -> Cập nhật L_in cho các đỉnh thăm được.
+            // Dijkstra trên đồ thị ban đầu
             pruned_dijkstra(hub, i, g.adj, Lin_v, Lin_d, P, T, vis_P, vis_T, Lout_v, Lout_d);
 
-            // 2. BFS trên graph ngược (g.rev_adj) -> Cập nhật L_out cho các đỉnh thăm được.
+            // Dijkstra trên đồ thị ngược
             pruned_dijkstra(hub, i, g.rev_adj, Lout_v, Lout_d, P, T, vis_P, vis_T, Lin_v, Lin_d);
         }
 
