@@ -2,8 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <chrono>
-#include "graph.hpp"
-#include "labeling.hpp"
+#include "lib/graph.hpp"
+#include "lib/labeling.hpp"
 
 using namespace std;
 using namespace chrono;
@@ -20,7 +20,7 @@ void generate_degree_order(const Graph& g, vector<int>& order) {
 }
 
 int main() {
-    ios_base::sync_with_stdio(false); cin.tie(NULL);
+    // ios_base::sync_with_stdio(false); cin.tie(NULL);
 
     int N, M, type;
     // Nhập thêm Type: 0 = Vô hướng, 1 = Có hướng
@@ -29,11 +29,10 @@ int main() {
     bool directed = (type == 1);
 
     Graph g(N);
-    cout << "Nhap " << M << " canh (u v [w]):\n";
+    cout << "Nhap " << M << " canh (u v w):\n";
     for (int i = 0; i < M; i++) {
         int u, v, w = 1;
-        cin >> u >> v; 
-        // cin >> w; // Nếu muốn nhập trọng số thì mở dòng này
+        cin >> u >> v >> w;
         g.addEdge(u, v, w, directed);
     }
 

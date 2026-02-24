@@ -47,11 +47,11 @@ class PrunedLabeling {
         visited_P.push_back(hub);
 
         while (!pq.empty()) {
-            auto [d, u] = pq.top(); pq.pop();
+            pair<int,int> cur = pq.top();
+            int d = cur.first, u = cur.second;
             if (d > P[u]) continue;
 
             // CHECK PRUNING: Liệu đã có đường đi u -> ... -> hub ngắn hơn chưa?
-            // Query nhanh
             int query_dist = INF;
             for (size_t idx = 0; idx < L_v[u].size(); idx++) {
                 int h = L_v[u][idx];
