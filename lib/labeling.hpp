@@ -47,7 +47,7 @@ class PrunedLabeling {
         visited_P.push_back(hub);
 
         while (!pq.empty()) {
-            pair<int,int> cur = pq.top();
+            pair<int,int> cur = pq.top(); pq.pop();
             int d = cur.first, u = cur.second;
             if (d > P[u]) continue;
 
