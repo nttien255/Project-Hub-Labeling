@@ -30,7 +30,8 @@ class PrunedLabeling {
                     vector<vector<int>>& L_v, vector<vector<int>>& L_d, 
                     vector<int>& P, vector<int>& T, vector<int>& visited_P, vector<int>& visited_T,
                     // Để check prune, ta cần label đối nghịch (nếu đang đi xuôi thì cần check label ngược)
-                    const vector<vector<int>>& L_opp_v, const vector<vector<int>>& L_opp_d) {
+                    const vector<vector<int>>& L_opp_v, const vector<vector<int>>& L_opp_d,
+                    const vector<int>& rank_map) {
         
         // B1: Chuẩn bị mảng T từ Label đối nghịch để prune nhanh
         for (size_t idx = 0; idx < L_opp_v[hub].size(); idx++) {
@@ -72,7 +73,7 @@ class PrunedLabeling {
                 // Chỉ đi đến đỉnh có rank cao hơn (chưa làm Hub) để đảm bảo DAG
                 // Lưu ý: Trong thực tế ta so sánh order_map[v] > rank
                 if (P[v] == INF) visited_P.push_back(v);
-                if (d + w < P[v]) {
+                if (rank_map[v] > rank && d + w < P[v]) {
                     P[v] = d + w;
                     pq.push({P[v], v});
                 }
@@ -108,10 +109,10 @@ public:
         for (int i = 0; i < N; i++) {
             int hub = order[i];
             // Dijkstra trên đồ thị ban đầu
-            pruned_dijkstra(hub, i, g.adj, Lin_v, Lin_d, P, T, vis_P, vis_T, Lout_v, Lout_d);
+            pruned_dijkstra(hub, i, g.adj, Lin_v, Lin_d, P, T, vis_P, vis_T, Lout_v, Lout_d, rank_map);
 
             // Dijkstra trên đồ thị ngược
-            pruned_dijkstra(hub, i, g.rev_adj, Lout_v, Lout_d, P, T, vis_P, vis_T, Lin_v, Lin_d);
+            pruned_dijkstra(hub, i, g.rev_adj, Lout_v, Lout_d, P, T, vis_P, vis_T, Lin_v, Lin_d, rank_map);
         }
 
         // Sentinel
